@@ -40,19 +40,19 @@ server = app.server
 pos = 0
 neg = 0
 time = 0
-vectorizer = pickle.load(open("vector.pickel", "rb"))
-w = pickle.load(open('train', 'rb'))
-x_train=w['x_train']
-vectorizer.fit(x_train)
-print(vectorizer)
-print(len(vectorizer.get_feature_names()))
-filename = 'logR.sav'
-
+# vectorizer = pickle.load(open("vector.pickel", "rb"))
+# w = pickle.load(open('train', 'rb'))
+# x_train=w['x_train']
+# vectorizer.fit(x_train)
+# print(vectorizer)
+# print(len(vectorizer.get_feature_names()))
+# filename = 'logR.sav'
+#
 tf2=pd.DataFrame(columns=['pos','neg','time','text'])
-# filename='logR.sav'
-loaded_model = joblib.load(open(filename, 'rb'))
-# # def calctime(a):
-#     return time.time() - a
+# # filename='logR.sav'
+# loaded_model = joblib.load(open(filename, 'rb'))
+def calctime(a):
+    return time.time() - a
 # #
 # #
 positive = 0
@@ -108,7 +108,7 @@ app.layout = html.Div([
 def update_graph(n):
     global positive
     global negative
-    content='hi'
+    # content='hi'
     # print(cal)
     try:
         df=pd.read_json('count.json')
