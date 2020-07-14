@@ -41,7 +41,7 @@ lemma = WordNetLemmatizer()
 app = dash.Dash(__name__)
 
 
-
+neu=0
 
 pos = 0
 neg = 0
@@ -1100,6 +1100,7 @@ def render_content(tab,sel_option,n):
     sel = dates[dates['day']==sel_option]
     global positive
     global negative
+    global neutral
     # content='hi'
     # print(cal)
     try:
@@ -1110,19 +1111,22 @@ def render_content(tab,sel_option,n):
         print("cant")
     global pos
     global neg
+    global neu
     global time
     global tf2
     positive=df['pos'][0]
     f ='%H:%M:%S'
     # now = time.localtime()
     negative = df['neg'][0]
+    neutral = df['neu'][0]
     cal.loc[cal['val']=='positive','count']=positive
     cal.loc[cal['val']=='negative','count']=negative
+    cal.loc[cal['val']=='neutral','count']=neutral
     time=df["time"][0]
     tp=df['details'][0]
-    temp={'pos':positive,'neg':negative,'time':df['time'][0],'text':[tp]}
+    temp={'pos':positive,'neg':negative,'neu':neutral,'time':df['time'][0],'text':[tp]}
     # print(temp)
-    temp=pd.DataFrame(temp,columns=['pos','neg','time','text'],index=[[1]])
+    temp=pd.DataFrame(temp,columns=['pos','neg','neu','time','text'],index=[[1]])
     # print(temp)
     tf2=pd.concat([tf2,temp],ignore_index=True)
     # tf2.drop_duplicates(subset=['text'],inplace=True)

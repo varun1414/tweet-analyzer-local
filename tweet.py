@@ -169,7 +169,7 @@ class listener(StreamListener):
         print("pos ",positive)
         print("neg",negative)
         print("neu",neutral)
-        k={"pos":positive,"neg":negative,"details":tl,"time":dt}
+        k={"pos":positive,"neg":negative,'neu':neutral,"details":tl,"time":dt}
         s=pd.DataFrame(k)
         print(s)
         try:
