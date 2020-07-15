@@ -74,8 +74,18 @@ class listener(StreamListener):
         global initime
         global tl
         all_data = json.loads(data)
+        print(all_data)
         tweet = all_data["text"]
+        location=all_data['user']['location']
+        hashtags=[]
+        try:
+            for i in all_data['entities']['hashtags']:
+                hashtags.append(i['text'])
+            print("hastags ",hashtags)
+        except:
+            hashtags=[]
         dt=all_data['created_at']
+
         dt=dt.split(" ")
         local_datetime = datetime.now()
         dt=dt[3]
@@ -141,7 +151,7 @@ class listener(StreamListener):
         print(t)
         # print(loaded_model)
         # print(vectorizer)
-        tl.append({'tweet':tweet,'label':m[0]})
+        tl.append({'tweet':tweet,'label':m[0],'location':location,'hashtags':hashtags})
         global positive
         global negative
         global neutral

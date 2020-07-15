@@ -17,6 +17,7 @@ from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
 import json
 from textblob import TextBlob
+import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 from nltk.stem import WordNetLemmatizer #word stemmer class
@@ -39,19 +40,19 @@ server = app.server
 pos = 0
 neg = 0
 time = 0
-'''
-vectorizer = pickle.load(open("vector.pickel", "rb"))
-w = pickle.load(open('train', 'rb'))
-x_train=w['x_train']
-vectorizer.fit(x_train)
-print(vectorizer)
-print(len(vectorizer.get_feature_names()))
-filename = 'logR.sav'''
-tf2=pd.DataFrame(columns=['pos','neg','time'])
-# filename='logR.sav'
-loaded_model = joblib.load(open(filename, 'rb'))
-# def calctime(a):
-#     return time.time() - a
+# vectorizer = pickle.load(open("vector.pickel", "rb"))
+# w = pickle.load(open('train', 'rb'))
+# x_train=w['x_train']
+# vectorizer.fit(x_train)
+# print(vectorizer)
+# print(len(vectorizer.get_feature_names()))
+# filename = 'logR.sav'
+#
+tf2=pd.DataFrame(columns=['pos','neg','time','text'])
+# # filename='logR.sav'
+# loaded_model = joblib.load(open(filename, 'rb'))
+def calctime(a):
+    return time.time() - a
 # #
 # #
 positive = 0
@@ -89,12 +90,13 @@ wnl = WordNetLemmatizer()
 #     # return content
 cal={'val':['positive','negative'],'count':[positive,negative]}
 cal=pd.DataFrame(cal)
+
 app.layout = html.Div([
     dcc.Graph(id='trend'),
     dcc.Graph(id='trend2'),
     dcc.Interval(
         id='interval-component-slow',
-        interval=1 * 9000,  # in milliseconds
+        interval=1 * 2000,  # in milliseconds
         n_intervals=0
     )
 ], style={'padding': '20px'})
@@ -106,11 +108,12 @@ app.layout = html.Div([
 def update_graph(n):
     global positive
     global negative
-    content='hi'
+    # content='hi'
     # print(cal)
     try:
         df=pd.read_json('count.json')
-        print(df['details'][0]['tweet'])
+        # print(df['details'][0])
+        # print(df['dt'])
     except:
         print("cant")
     global pos
@@ -118,20 +121,22 @@ def update_graph(n):
     global time
     global tf2
     positive=df['pos'][0]
-
+    f ='%H:%M:%S'
+    # now = time.localtime()
     negative = df['neg'][0]
     cal.loc[cal['val']=='positive','count']=positive
     cal.loc[cal['val']=='negative','count']=negative
     time=df["time"][0]
-    temp={'pos':positive,'neg':negative,'time':time,'text':df['details'][0]}
+    tp=df['details'][0]
+    temp={'pos':positive,'neg':negative,'time':df['time'][0],'text':[tp]}
     # print(temp)
-    temp=pd.DataFrame(temp,columns=['pos','neg','time','details'],index=[[1]])
+    temp=pd.DataFrame(temp,columns=['pos','neg','time','text'],index=[[1]])
     # print(temp)
     tf2=pd.concat([tf2,temp],ignore_index=True)
-    tf2.drop_duplicates(subset=['details'],inplace=True)
-    print(len(tf2))
-    x=list([20,30,204,309])
-    y=list([90,345,234,234])
+    # tf2.drop_duplicates(subset=['text'],inplace=True)
+    print(tf2)
+    # x=list([20,30,204,309])
+    # y=list([90,345,234,234])
     fig=px.bar(cal,x='val',y='count')
     # fig2=px.scatter(tf,x='time',y=[['pos','neg']],color=[['pos','neg']])
     fig2=px.scatter(tf2,x='time',y=['neg','pos'])
